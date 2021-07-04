@@ -1,0 +1,38 @@
+Private Sub Document_Open()
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'Chao MA
+'updated on 27JUL2012
+'to unlink all the field except TOC and HYPERLINK
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+'to exist ProtectedView
+'If Not Application.ActiveProtectedViewWindow Is Nothing Then
+'    If Application.ProtectedViewWindows.Count > 0 Then
+'        'Application.ActiveProtectedViewWindow.Edit
+'    End If
+'End If
+
+If ActiveDocument.Fields.Count > 0 Then
+    If MsgBox("Field code detected! Do you want to clean them up?", vbYesNo + vbQuestion, "Field Detected") = vbYes Then
+        Dim fld As Field
+        For Each fld In ActiveDocument.Fields
+        'MsgBox ActiveDocument.Fields.Count
+        'MsgBox fld.Type
+        If Not (fld.Type = wdFieldTOC Or fld.Type = wdFieldHyperlink) Then 'fld.Type = wdFieldIndexEntry Or _
+        'fld.Type = wdFieldTOCEntry Or fld.Type = wdFieldIndex) Then
+            fld.Unlink
+        Else
+            '''''
+        End If
+        Next
+        
+        If ActiveDocument.ReadOnly Then
+            Application.Dialogs(wdDialogFileSaveAs).Show
+        Else
+            ActiveDocument.Save
+        End If
+
+    End If
+End If
+
+End Sub
